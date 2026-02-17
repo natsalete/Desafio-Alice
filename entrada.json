@@ -1,0 +1,44 @@
+[
+  { "id": "t01", "userId": 1, "amount": 100, "timestamp": "2024-01-10T10:00:00Z" },
+  { "id": "t02", "userId": 1, "amount": 50,  "timestamp": "2024-01-10T10:03:00Z" },
+  { "id": "t03", "userId": 1, "amount": -20, "timestamp": "2024-01-10T10:04:30Z" },
+  { "id": "t04", "userId": 1, "amount": 80,  "timestamp": "2024-01-10T10:15:00Z" },
+  { "id": "t05", "userId": 1, "amount": 40,  "timestamp": "2024-01-10T10:18:00Z" },
+
+  { "id": "t06", "userId": 2, "amount": 200, "timestamp": "2024-01-10T09:50:00Z" },
+  { "id": "t07", "userId": 2, "amount": -50, "timestamp": "2024-01-10T09:54:00Z" },
+  { "id": "t08", "userId": 2, "amount": 30,  "timestamp": "2024-01-10T10:10:00Z" },
+
+  { "id": "t09", "userId": 3, "amount": 500, "timestamp": "2024-01-10T11:00:00Z" },
+
+  { "id": "t10", "userId": 4, "amount": 60,  "timestamp": "2024-01-10T08:00:00Z" },
+  { "id": "t11", "userId": 4, "amount": 40,  "timestamp": "2024-01-10T08:02:00Z" },
+  { "id": "t12", "userId": 4, "amount": 30,  "timestamp": "2024-01-10T08:10:00Z" },
+  { "id": "t13", "userId": 4, "amount": -10, "timestamp": "2024-01-10T08:14:00Z" },
+
+  { "id": "t14", "userId": 5, "amount": 90,  "timestamp": "2024-01-10T12:00:00Z" },
+  { "id": "t15", "userId": 5, "amount": 20,  "timestamp": "2024-01-10T12:06:00Z" },
+  { "id": "t16", "userId": 5, "amount": 70,  "timestamp": "2024-01-10T12:07:00Z" },
+
+  { "id": "t17", "userId": 6, "amount": 15,  "timestamp": "2024-01-10T14:00:00Z" },
+  { "id": "t18", "userId": 6, "amount": 25,  "timestamp": "2024-01-10T14:03:00Z" },
+  { "id": "t19", "userId": 6, "amount": 35,  "timestamp": "2024-01-10T14:09:00Z" },
+
+  { "id": "t20", "userId": 7, "amount": 120, "timestamp": "2024-01-10T16:30:00Z" },
+
+  { "id": "t21", "userId": 8, "amount": 10,  "timestamp": "2024-01-10T07:00:00Z" },
+  { "id": "t22", "userId": 8, "amount": 20,  "timestamp": "2024-01-10T07:04:00Z" },
+  { "id": "t23", "userId": 8, "amount": 30,  "timestamp": "2024-01-10T07:05:00Z" },
+
+  { "id": "t24", "userId": 9, "amount": 55,  "timestamp": "2024-01-10T18:00:00Z" },
+  { "id": "t25", "userId": 9, "amount": -15, "timestamp": "2024-01-10T18:02:00Z" },
+
+  { "id": "t26", "userId": 10, "amount": 300, "timestamp": "2024-01-10T20:00:00Z" },
+  { "id": "t27", "userId": 10, "amount": 100, "timestamp": "2024-01-10T20:04:00Z" },
+  { "id": "t28", "userId": 10, "amount": 50,  "timestamp": "2024-01-10T20:11:00Z" },
+
+  { "id": "t29", "userId": 11, "amount": 75,  "timestamp": "2024-01-10T06:00:00Z" },
+  { "id": "t30", "userId": 11, "amount": 25,  "timestamp": "2024-01-10T06:03:00Z" },
+  { "id": "t31", "userId": 11, "amount": 40,  "timestamp": "2024-01-10T06:09:00Z" },
+  { "id": "t32", "userId": 11, "amount": -10, "timestamp": "2024-01-10T06:12:00Z" }
+]
