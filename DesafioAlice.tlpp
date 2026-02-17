@@ -1,6 +1,8 @@
 #include 'tlpp-core.th'
 #include 'tlpp-rest.th'
 
+// POST /api/alice/consolidar
+// Orquestra leitura, ordenacao, agrupamento e resposta
 @Post('/api/alice/consolidar')
 user function ConsolidarTransacoes()
     local cBody         := oRest:getBodyRequest()
@@ -20,7 +22,6 @@ user function ConsolidarTransacoes()
     aTransactions := oJson['data']
 
     OrdenarTransacoes(aTransactions)
-
     aResult := ProcessarGrupos(aTransactions)
 
     for nI := 1 to len(aResult)
@@ -38,8 +39,11 @@ user function ConsolidarTransacoes()
 
     cResp += ']'
     oRest:setResponse(cResp)
+
 return
 
+// Ordenacao por userId e timestamp usando ASort (QuickSort nativo — O(n log n))
+// Timestamp ISO-8601 e comparavel diretamente como string
 static function OrdenarTransacoes(aTrans)
     ASort(aTrans, , , {|oA, oB| ;
         iif(oA['userId'] != oB['userId'], ;
@@ -48,6 +52,7 @@ static function OrdenarTransacoes(aTrans)
     })
 return
 
+// Agrupa transacoes por janela deslizante de 5 minutos (300s) — O(n)
 static function ProcessarGrupos(aTrans)
     local aGrupos    := {}
     local nI         := 0
@@ -60,6 +65,7 @@ static function ProcessarGrupos(aTrans)
     local nDiffSeg   := 0
 
     for nI := 1 to len(aTrans)
+
         if lNovoGrupo
             nUserId    := aTrans[nI]['userId']
             cTsInicio  := aTrans[nI]['timestamp']
@@ -85,6 +91,7 @@ static function ProcessarGrupos(aTrans)
         if nI == len(aTrans)
             addGrupo(aGrupos, nUserId, cTsInicio, cTsFim, nTotal)
         endif
+
     next
 
 return aGrupos
@@ -101,6 +108,7 @@ return
 static function TsDiffSeg(cTs1, cTs2)
 return TsParaSeg(cTs2) - TsParaSeg(cTs1)
 
+// Converte timestamp ISO-8601 em segundos para comparacao numerica
 static function TsParaSeg(cTs)
     local nDia := Val(substr(cTs, 9,  2))
     local nH   := Val(substr(cTs, 12, 2))
