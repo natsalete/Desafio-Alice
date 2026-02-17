@@ -1,0 +1,109 @@
+#include 'tlpp-core.th'
+#include 'tlpp-rest.th'
+
+@Post('/api/alice/consolidar')
+user function ConsolidarTransacoes()
+    local cBody         := oRest:getBodyRequest()
+    local oJson         := nil
+    local aTransactions := {}
+    local aResult       := {}
+    local nI            := 0
+    local cResp         := '['
+    local oGrp          := nil
+
+    cBody := StrTran(cBody, Chr(10), "")
+    cBody := StrTran(cBody, Chr(13), "")
+    cBody := StrTran(cBody, Chr(9),  "")
+
+    oJson := JsonObject():New()
+    oJson:fromJson('{"data":' + cBody + '}')
+    aTransactions := oJson['data']
+
+    OrdenarTransacoes(aTransactions)
+
+    aResult := ProcessarGrupos(aTransactions)
+
+    for nI := 1 to len(aResult)
+        oGrp := aResult[nI]
+        cResp += '{'
+        cResp += '"userId":'  + cValToChar(oGrp['userId']) + ','
+        cResp += '"inicio":"' + oGrp['inicio'] + '",'
+        cResp += '"fim":"'    + oGrp['fim']    + '",'
+        cResp += '"total":'   + cValToChar(oGrp['total'])
+        cResp += '}'
+        if nI < len(aResult)
+            cResp += ','
+        endif
+    next
+
+    cResp += ']'
+    oRest:setResponse(cResp)
+return
+
+static function OrdenarTransacoes(aTrans)
+    ASort(aTrans, , , {|oA, oB| ;
+        iif(oA['userId'] != oB['userId'], ;
+            oA['userId'] < oB['userId'], ;
+            oA['timestamp'] < oB['timestamp']) ;
+    })
+return
+
+static function ProcessarGrupos(aTrans)
+    local aGrupos    := {}
+    local nI         := 0
+    local cTsInicio  := ""
+    local cTsFim     := ""
+    local cTsProx    := ""
+    local nTotal     := 0
+    local nUserId    := 0
+    local lNovoGrupo := .T.
+    local nDiffSeg   := 0
+
+    for nI := 1 to len(aTrans)
+        if lNovoGrupo
+            nUserId    := aTrans[nI]['userId']
+            cTsInicio  := aTrans[nI]['timestamp']
+            cTsFim     := cTsInicio
+            nTotal     := aTrans[nI]['amount']
+            lNovoGrupo := .F.
+        else
+            cTsProx  := aTrans[nI]['timestamp']
+            nDiffSeg := TsDiffSeg(cTsFim, cTsProx)
+
+            if aTrans[nI]['userId'] == nUserId .and. nDiffSeg <= 300
+                cTsFim := cTsProx
+                nTotal += aTrans[nI]['amount']
+            else
+                addGrupo(aGrupos, nUserId, cTsInicio, cTsFim, nTotal)
+                nUserId    := aTrans[nI]['userId']
+                cTsInicio  := cTsProx
+                cTsFim     := cTsInicio
+                nTotal     := aTrans[nI]['amount']
+            endif
+        endif
+
+        if nI == len(aTrans)
+            addGrupo(aGrupos, nUserId, cTsInicio, cTsFim, nTotal)
+        endif
+    next
+
+return aGrupos
+
+static function addGrupo(aGrupos, nUser, cInic, cFim, nTot)
+    local jGrp := JsonObject():New()
+    jGrp['userId'] := nUser
+    jGrp['inicio'] := cInic
+    jGrp['fim']    := cFim
+    jGrp['total']  := nTot
+    aAdd(aGrupos, jGrp)
+return
+
+static function TsDiffSeg(cTs1, cTs2)
+return TsParaSeg(cTs2) - TsParaSeg(cTs1)
+
+static function TsParaSeg(cTs)
+    local nDia := Val(substr(cTs, 9,  2))
+    local nH   := Val(substr(cTs, 12, 2))
+    local nM   := Val(substr(cTs, 15, 2))
+    local nS   := Val(substr(cTs, 18, 2))
+return (nDia * 86400) + (nH * 3600) + (nM * 60) + nS
