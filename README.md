@@ -12,6 +12,8 @@ A API recebe uma lista de transações financeiras desordenadas e as consolida p
 
 ## Como Testar
 
+Compile o fonte `DesafioAlice.tlpp` no ambiente Protheus e acesse o endpoint abaixo via **Postman** ou **Insomnia**:
+
 ### Endpoint
 
 ```
